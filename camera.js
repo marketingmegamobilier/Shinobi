@@ -734,6 +734,10 @@ s.init=function(x,e,k,fn){
         break;
         case'url':
             //build a complete url from pieces
+            //use auto_host directly when auto_host_enable is "1"
+            if(e.details.auto_host_enable==='1'&&e.details.auto_host&&e.details.auto_host!==''){
+                e.url=e.details.auto_host;return e.url;
+            }
             e.authd='';
             if(e.details.muser&&e.details.muser!==''&&e.host.indexOf('@')===-1) {
                 e.authd=e.details.muser+':'+e.details.mpass+'@';
@@ -742,6 +746,11 @@ s.init=function(x,e,k,fn){
             e.url=e.protocol+'://'+e.authd+e.host+e.porty+e.path;return e.url;
         break;
         case'url_no_path':
+            //use auto_host directly when auto_host_enable is "1"
+            if(e.details.auto_host_enable==='1'&&e.details.auto_host&&e.details.auto_host!==''){
+                //strip path from auto_host to return host+port only
+                e.url=e.details.auto_host.replace(/^(rtsp|rtmp|http|https):\/\/([^\/]+).*/,'$1://$2');return e.url;
+            }
             e.authd='';
             if(!e.details.muser){e.details.muser=''}
             if(!e.details.mpass){e.details.mpass=''}
